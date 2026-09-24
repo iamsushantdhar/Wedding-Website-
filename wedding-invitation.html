@@ -92,6 +92,8 @@ h3{font-weight:500}
 .hero-leaf path{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;
   animation:draw 2.4s var(--ease) .25s forwards}
 .hero-leaf .vein{stroke-width:.8;animation-delay:1.1s;animation-duration:1.6s}
+.hero-leaf{transform-origin:50% 85%;will-change:transform}
+.hero-text{will-change:transform,opacity}
 .hero-shri{font-family:var(--dev);font-size:15px;color:var(--ink-2);letter-spacing:.04em}
 .hero-blessing{font-family:var(--dev);font-size:clamp(18px,2vw,24px);color:var(--red);margin-top:6px}
 h1{font-size:clamp(60px,12vw,150px);font-weight:300;line-height:.92;letter-spacing:-.03em;margin-top:18px}
@@ -122,9 +124,47 @@ h1 .amp{font-style:italic;font-weight:300;color:var(--red);margin-right:.08em}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes fade{to{opacity:1}}
 
-/* ---------- reveal on scroll ---------- */
-.rv{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.rv.in{opacity:1;transform:none}
+/* ---------- scroll motion: everything presses into the paper ----------
+   .rv marks an element the observer watches; the modifier says how it enters. */
+.rv-up{opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv-up.in{opacity:1;transform:none}
+.mask{overflow:hidden;padding-bottom:.1em}
+.mask>span{display:block;transform:translateY(105%);transition:transform 1s var(--ease)}
+.mask.in>span,.in .mask>span{transform:none}
+.rv-stag>*{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv-stag.in>*{opacity:1;transform:none}
+.rv-stag.in>*:nth-child(2){transition-delay:.12s}
+.rv-stag.in>*:nth-child(3){transition-delay:.24s}
+.rv-stag.in>*:nth-child(4){transition-delay:.36s}
+.rv-stag.in>*:nth-child(5){transition-delay:.48s}
+.rule::before,.rule::after{transform:scaleX(0);transition:transform 1.2s var(--ease)}
+.rule::before{transform-origin:right}.rule::after{transform-origin:left}
+.rule svg{transform:scale(0);transition:transform .7s var(--ease) .35s}
+.rule.in::before,.rule.in::after{transform:scaleX(1)}.rule.in svg{transform:none}
+.ev::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--hair);transform:scaleX(0);transform-origin:left;transition:transform 1.3s var(--ease)}
+.ev.in::before{transform:scaleX(1)}
+.ev-num{display:inline-block;transform:translateX(-22px);transition:transform 1s var(--ease),color .25s var(--ease)}
+.ev.in .ev-num{transform:none}
+@media (hover:hover){.ev:hover .ev-num{color:var(--red)}}
+.rv-media .video,.rv-media .caption{opacity:0;transition:opacity 1s var(--ease)}
+.rv-media .caption{transition-delay:.6s}
+.rv-media .pair img:first-child{opacity:0;transform:translateY(24px) rotate(-3deg);transition:transform 1.1s var(--ease) .15s,opacity .9s var(--ease) .15s}
+.rv-media .pair img:last-child{opacity:0;transform:translateY(30px) rotate(8deg);transition:transform 1.2s var(--ease) .35s,opacity .9s var(--ease) .35s}
+.rv-media.in .video,.rv-media.in .caption,.rv-media.in .pair img{opacity:1}
+.rv-media.in .pair img:first-child{transform:none}
+.rv-media.in .pair img:last-child{transform:rotate(2.5deg)}
+/* the photos drift a touch slower than the text (scroll-driven, no JS) */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .pair{animation:drift linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
+    @keyframes drift{from{translate:0 36px}to{translate:0 -36px}}
+  }
+}
+/* the red field wipes down over the paper, then the words arrive */
+.rsvp::before{content:"";position:absolute;inset:0;background:var(--red);z-index:-1;transform:scaleY(0);transform-origin:top;transition:transform 1.1s var(--ease)}
+.rsvp.in::before{transform:none}
+.rsvp .rsvp-intro,.rsvp .form,.rsvp .done{opacity:0;transition:opacity .9s var(--ease) .5s}
+.rsvp.in .rsvp-intro,.rsvp.in .form,.rsvp.in .done{opacity:1}
 
 /* ---------- story ---------- */
 .story{display:grid;gap:48px;margin-top:40px}
@@ -150,7 +190,7 @@ h1 .amp{font-style:italic;font-weight:300;color:var(--red);margin-right:.08em}
 
 /* ---------- events ---------- */
 .events{margin-top:48px;border-bottom:1px solid var(--hair)}
-.ev{display:grid;gap:14px 40px;padding:36px 0;border-top:1px solid var(--hair);grid-template-columns:1fr}
+.ev{display:grid;gap:14px 40px;padding:36px 0;position:relative;grid-template-columns:1fr}
 .ev-date{display:flex;align-items:baseline;gap:12px}
 .ev-num{font-size:52px;font-weight:300;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .ev-day{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
@@ -178,7 +218,7 @@ h1 .amp{font-style:italic;font-weight:300;color:var(--red);margin-right:.08em}
 @media (min-width:760px){.notes{grid-template-columns:repeat(3,1fr);gap:40px}}
 
 /* ---------- rsvp ---------- */
-.rsvp{background:var(--red);color:var(--paper)}
+.rsvp{position:relative;isolation:isolate;color:var(--paper)}
 .rsvp .eyebrow{color:var(--gold)}
 .rsvp-grid{display:grid;gap:48px}
 .rsvp-intro p{margin-top:18px;color:rgba(245,237,223,.8);max-width:40ch;text-wrap:pretty}
@@ -230,7 +270,9 @@ body.lang-hi .footer p{letter-spacing:.04em}
   html{scroll-behavior:auto}
   .line>span,.fade{animation:none;transform:none;opacity:1}
   .hero-leaf path{animation:none;stroke-dashoffset:0}
-  .rv{opacity:1;transform:none;transition:none}
+  .rv-up,.rv-stag>*,.mask>span,.rule::before,.rule::after,.rule svg,.ev::before,.ev-num,
+  .rv-media .video,.rv-media .caption,.rv-media .pair img:first-child,.rsvp::before,.rsvp .rsvp-intro,.rsvp .form,.rsvp .done{opacity:1;transform:none;transition:none}
+  .rv-media .pair img:last-child{opacity:1;transform:rotate(2.5deg);transition:none}
 }
 </style>
 </head>
@@ -289,21 +331,21 @@ body.lang-hi .footer p{letter-spacing:.04em}
   </svg>
 </header>
 
-<div class="rule" aria-hidden="true"><svg viewBox="0 0 200 224"><use href="#chinar" fill="none" stroke="currentColor" stroke-width="7"/></svg></div>
+<div class="rule rv" aria-hidden="true"><svg viewBox="0 0 200 224"><use href="#chinar" fill="none" stroke="currentColor" stroke-width="7"/></svg></div>
 
 <!-- ===== story ===== -->
 <section class="section" id="story">
   <div class="container">
-    <p class="eyebrow rv" data-i18n="story.eyebrow">The beginning</p>
-    <h2 class="rv" data-i18n="story.title">Our story</h2>
+    <p class="eyebrow rv rv-up" data-i18n="story.eyebrow">The beginning</p>
+    <h2 class="mask rv"><span data-i18n="story.title">Our story</span></h2>
     <div class="story">
-      <div class="story-text rv">
+      <div class="story-text rv rv-up">
         <p data-i18n="story.p1">Sushant and Aarushi met in school, more years ago than either of them likes to admit — somewhere between forgotten homework and long walks home. They still can't agree on who made the first move, only that once it was made, there was no turning back.</p>
         <p data-i18n="story.p2">Since then: oceans crossed, distances closed, and every challenge along the way met with the same quiet answer — each other.</p>
         <p data-i18n="story.p3">Now begins the next chapter — one home, one family, and a lifetime of the ordinary, extraordinary days that follow “happily ever after.”</p>
         <p class="story-sign">S &amp; A</p>
       </div>
-      <div class="media rv">
+      <div class="media rv rv-media">
         <video class="video" controls playsinline preload="metadata">
           <source src="Main.mp4" type="video/mp4">
         </video>
@@ -320,8 +362,8 @@ body.lang-hi .footer p{letter-spacing:.04em}
 <!-- ===== families ===== -->
 <section class="section" id="families" style="padding-top:0">
   <div class="container">
-    <p class="eyebrow rv center" data-i18n="families.eyebrow">With love and blessings</p>
-    <div class="families rv">
+    <p class="eyebrow rv rv-up center" data-i18n="families.eyebrow">With love and blessings</p>
+    <div class="families rv rv-stag">
       <div>
         <div class="fam-name">Sushant</div>
         <div class="fam-of" data-i18n="families.sonOf">son of</div>
@@ -337,18 +379,18 @@ body.lang-hi .footer p{letter-spacing:.04em}
   </div>
 </section>
 
-<div class="rule" aria-hidden="true"><svg viewBox="0 0 200 224"><use href="#chinar" fill="none" stroke="currentColor" stroke-width="7"/></svg></div>
+<div class="rule rv" aria-hidden="true"><svg viewBox="0 0 200 224"><use href="#chinar" fill="none" stroke="currentColor" stroke-width="7"/></svg></div>
 
 <!-- ===== events ===== -->
 <section class="section" id="events">
   <div class="container">
-    <p class="eyebrow rv" data-i18n="events.eyebrow">Programme</p>
-    <h2 class="rv" data-i18n="events.title">The celebrations</h2>
-    <p class="lede rv" style="margin-top:16px" data-i18n="events.sub">Five celebrations across six days, in Noida and Ghaziabad.</p>
+    <p class="eyebrow rv rv-up" data-i18n="events.eyebrow">Programme</p>
+    <h2 class="mask rv"><span data-i18n="events.title">The celebrations</span></h2>
+    <p class="lede rv rv-up" style="margin-top:16px" data-i18n="events.sub">Five celebrations across six days, in Noida and Ghaziabad.</p>
 
     <div class="events">
 
-      <article class="ev rv" id="sagaai">
+      <article class="ev rv rv-stag" id="sagaai">
         <div class="ev-date"><span class="ev-num">22</span><span class="ev-day" data-i18n="ev.sun">Sun · Nov</span></div>
         <div>
           <p class="ev-time" data-i18n="events.sagaai.time">Engagement</p>
@@ -365,7 +407,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
         </div>
       </article>
 
-      <article class="ev rv" id="mehndi">
+      <article class="ev rv rv-stag" id="mehndi">
         <div class="ev-date"><span class="ev-num">24</span><span class="ev-day" data-i18n="ev.tue">Tue · Nov</span></div>
         <div>
           <p class="ev-time" data-i18n="events.timeTBA">Evening · time to be announced</p>
@@ -382,7 +424,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
         </div>
       </article>
 
-      <article class="ev rv" id="haldi">
+      <article class="ev rv rv-stag" id="haldi">
         <div class="ev-date"><span class="ev-num">25</span><span class="ev-day" data-i18n="ev.wed">Wed · Nov</span></div>
         <div>
           <p class="ev-time" data-i18n="events.haldi.time">Morning</p>
@@ -399,7 +441,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
         </div>
       </article>
 
-      <article class="ev rv" id="devgon">
+      <article class="ev rv rv-stag" id="devgon">
         <div class="ev-date"><span class="ev-num">25</span><span class="ev-day" data-i18n="ev.wed">Wed · Nov</span></div>
         <div>
           <p class="ev-time" data-i18n="events.devgon.time">Day and night</p>
@@ -423,7 +465,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
         </div>
       </article>
 
-      <article class="ev rv" id="reception">
+      <article class="ev rv rv-stag" id="reception">
         <div class="ev-date"><span class="ev-num">27</span><span class="ev-day" data-i18n="ev.fri">Fri · Nov</span></div>
         <div>
           <p class="ev-time" data-i18n="events.timeTBA">Evening · time to be announced</p>
@@ -447,9 +489,9 @@ body.lang-hi .footer p{letter-spacing:.04em}
 <!-- ===== good to know ===== -->
 <section class="section" id="notes" style="padding-top:0">
   <div class="container">
-    <p class="eyebrow rv" data-i18n="notes.eyebrow">A few notes</p>
-    <h2 class="rv" data-i18n="notes.title">Good to know</h2>
-    <div class="notes rv">
+    <p class="eyebrow rv rv-up" data-i18n="notes.eyebrow">A few notes</p>
+    <h2 class="mask rv"><span data-i18n="notes.title">Good to know</span></h2>
+    <div class="notes rv rv-stag">
       <div>
         <h3 data-i18n="notes.weather.title">Weather</h3>
         <p data-i18n="notes.weather.desc">Late November in Delhi NCR is pleasantly cool, generally 12–25°C. Light layers by day, a shawl or jacket for the evenings.</p>
@@ -467,11 +509,11 @@ body.lang-hi .footer p{letter-spacing:.04em}
 </section>
 
 <!-- ===== rsvp ===== -->
-<section class="section rsvp" id="rsvp">
+<section class="section rsvp rv" id="rsvp">
   <div class="container rsvp-grid">
     <div class="rsvp-intro">
       <p class="eyebrow">RSVP</p>
-      <h2 data-i18n="rsvp.title">Will you join us?</h2>
+      <h2 class="mask"><span data-i18n="rsvp.title">Will you join us?</span></h2>
       <p data-i18n="rsvp.intro">Tell us who is coming so we can plan seats, thalis and rooms for everyone.</p>
       <p class="by" data-i18n="rsvp.by">Kindly reply by 5 September 2026</p>
     </div>
@@ -497,7 +539,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
 
       <fieldset class="field">
         <legend data-i18n="rsvp.attendingLegend">Will you be attending?</legend>
-        <div class="choices">
+        <div class="choices rv rv-stag">
           <label class="choice"><input type="radio" name="attending" value="yes" checked><span data-i18n="rsvp.accept">Joyfully accept</span></label>
           <label class="choice"><input type="radio" name="attending" value="no"><span data-i18n="rsvp.decline">Regretfully decline</span></label>
         </div>
@@ -510,7 +552,7 @@ body.lang-hi .footer p{letter-spacing:.04em}
         </div>
         <fieldset class="field">
           <legend data-i18n="rsvp.eventsLegend">Which celebrations will you join?</legend>
-          <div class="choices">
+          <div class="choices rv rv-stag">
             <label class="choice"><input type="checkbox" name="events" value="Sagaai 22 Nov" checked><span data-i18n="events.sagaai.title">Sagaai</span></label>
             <label class="choice"><input type="checkbox" name="events" value="Mehndi Raat 24 Nov" checked><span data-i18n="rsvp.evMehndi">Mehndi Raat</span></label>
             <label class="choice"><input type="checkbox" name="events" value="Haldi 25 Nov" checked><span data-i18n="events.haldi.title">Haldi</span></label>
@@ -655,10 +697,25 @@ body.lang-hi .footer p{letter-spacing:.04em}
   }
   updateCount();
 
-  /* ---------- nav ---------- */
+  /* ---------- nav + hero scroll-away ---------- */
   var nav = document.getElementById("nav");
-  function onScroll(){ nav.classList.toggle("scrolled", window.scrollY > 24); }
-  window.addEventListener("scroll", onScroll, { passive:true }); onScroll();
+  var heroText = document.querySelector(".hero-text"), heroLeaf = document.querySelector(".hero-leaf");
+  var heroH = 0, queued = false;
+  function measure(){ heroH = document.querySelector(".hero").offsetHeight; }
+  function frame(){
+    queued = false;
+    var y = window.scrollY;
+    nav.classList.toggle("scrolled", y > 24);
+    if(reduced || y > heroH) return;
+    // text sinks and fades as the leaf lifts away: transform/opacity only
+    heroText.style.transform = "translateY(" + (y * .18).toFixed(1) + "px)";
+    heroText.style.opacity = Math.max(0, 1 - y / (heroH * .85)).toFixed(3);
+    heroLeaf.style.transform = "translateY(" + (-y * .12).toFixed(1) + "px) rotate(" + (y * .012).toFixed(2) + "deg)";
+  }
+  function onScroll(){ if(!queued){ queued = true; requestAnimationFrame(frame); } }
+  window.addEventListener("scroll", onScroll, { passive:true });
+  window.addEventListener("resize", function(){ measure(); onScroll(); });
+  measure(); frame();
 
   /* ---------- reveal ---------- */
   if(!reduced && "IntersectionObserver" in window){
