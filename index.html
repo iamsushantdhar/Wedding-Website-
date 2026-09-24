@@ -167,8 +167,8 @@ button{font-family:var(--body);cursor:pointer;background:none;border:none;}
 .nav.scrolled{background:rgba(251,243,228,0.94);backdrop-filter:blur(10px);padding:12px 0;box-shadow:var(--shadow-sm);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:var(--script);font-size:26px;color:var(--maroon);}
-.nav-links{display:flex;gap:26px;list-style:none;}
-.nav-links a{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon-deep);position:relative;padding-bottom:3px;}
+.nav-links{display:flex;gap:19px;list-style:none;white-space:nowrap;}
+.nav-links a{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon-deep);position:relative;padding-bottom:3px;}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold-deep);transition:width .3s ease;}
 .nav-links a:hover::after{width:100%;}
 .nav-toggle{display:none;}
@@ -909,6 +909,24 @@ legend{
 /* ==========================================================
    19. RESPONSIVE
    ========================================================== */
+@media (max-width:1180px){
+  .nav-links{
+    position:fixed;top:0;right:0;height:100vh;width:min(80vw,320px);
+    background:var(--ivory);flex-direction:column;justify-content:center;align-items:flex-start;
+    padding:0 40px;gap:24px;transform:translateX(100%);white-space:normal;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);box-shadow:-10px 0 40px rgba(0,0,0,.12);
+  }
+  .nav-links.open{transform:translateX(0);}
+  .nav-links a{font-size:13px;letter-spacing:.1em;}
+  .nav-toggle{
+    display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;
+    z-index:600;padding:6px;
+  }
+  .nav-toggle span{width:24px;height:1px;background:var(--maroon-deep);transition:transform .3s ease, opacity .3s ease;}
+  .nav-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+}
 @media (max-width:860px){
   .event{grid-template-columns:26px 1fr;}
   .event-node{grid-column:1;align-self:start;margin-top:48px;}
@@ -918,21 +936,6 @@ legend{
   .event-card{padding:36px 26px;margin-top:22px;}
   .notes-grid{grid-template-columns:1fr;}
   .rsvp-form{padding:28px 22px;}
-  .nav-links{
-    position:fixed;top:0;right:0;height:100vh;width:min(80vw,320px);
-    background:var(--ivory);flex-direction:column;justify-content:center;align-items:flex-start;
-    padding:0 40px;gap:24px;transform:translateX(100%);
-    transition:transform .45s cubic-bezier(.2,.7,.2,1);box-shadow:-10px 0 40px rgba(0,0,0,.12);
-  }
-  .nav-links.open{transform:translateX(0);}
-  .nav-toggle{
-    display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;
-    z-index:600;padding:6px;
-  }
-  .nav-toggle span{width:24px;height:1px;background:var(--maroon-deep);transition:transform .3s ease, opacity .3s ease;}
-  .nav-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
-  .nav-toggle.open span:nth-child(2){opacity:0;}
-  .nav-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
   .section{padding:86px 0;}
   .mandala-corner{width:220px;height:220px;}
 }
@@ -1224,13 +1227,13 @@ legend{
     <a href="#top" class="nav-logo">S&amp;A</a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#story" data-i18n="nav.story">Our Story</a></li>
-      <li><a href="#proposal" data-i18n="nav.proposal">The Proposal</a></li>
+      <li><a href="#proposal" data-i18n="nav.proposal">Proposal</a></li>
       <li><a href="#mehndi" data-i18n="nav.mehndi">Mehndi Raat</a></li>
       <li><a href="#haldi" data-i18n="nav.haldi">Haldi</a></li>
       <li><a href="#devgon" data-i18n="nav.devgon">Devgon</a></li>
       <li><a href="#baraat" data-i18n="nav.baraat">Baraat</a></li>
       <li><a href="#reception" data-i18n="nav.reception">Reception</a></li>
-      <li><a href="#notes" data-i18n="nav.notes">Good To Know</a></li>
+      <li><a href="#notes" data-i18n="nav.notes">Know Before</a></li>
       <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
     </ul>
     <div style="display:flex;align-items:center;gap:14px;">
